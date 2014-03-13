@@ -28,4 +28,9 @@ class Application
                     end
                 end
     end
+
+    def find_all_trips (parameters)
+        start, limit, select = parameters.values_at(:start, :limit, :select)
+        [1, 2]
+    end
 end
