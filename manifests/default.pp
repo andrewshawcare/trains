@@ -9,13 +9,7 @@ class {"ruby":
     gems_version => "latest"
 }
 
-package {"rake":
-    require => Class["ruby"],
-    ensure => installed,
-    provider => "gem"
-}
-
-package {"rspec":
+package {"bundler":
     require => Class["ruby"],
     ensure => installed,
     provider => "gem"
