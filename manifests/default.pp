@@ -14,3 +14,14 @@ package {"bundler":
     ensure => installed,
     provider => "gem"
 }
+
+package {"build-essential":
+    require => Exec["apt-get update"],
+    ensure => installed
+}
+
+exec {"bundle install":
+    require => Package["bundler"],
+    path => "/usr/local/bin",
+    cwd => "/vagrant"
+}
