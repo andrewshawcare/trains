@@ -1,6 +1,6 @@
 require_relative './weighted_directed_graph.rb'
 
-class Application
+class Trains
   def initialize(graph_file_path)
     graph_file_content = File.read(graph_file_path)
     edge_strings = graph_file_content.split(/,\s/)

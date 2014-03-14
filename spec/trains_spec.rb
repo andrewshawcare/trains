@@ -1,8 +1,8 @@
-require_relative '../application.rb'
+require_relative '../trains.rb'
 
-describe Application, "#output" do
+describe Trains, "#output" do
     before(:each) do
-        @application = Application.new("./input.txt")
+        @application = Trains.new("./input.txt")
     end
 
     it "returns 9 for the distance of route A-B-C" do
