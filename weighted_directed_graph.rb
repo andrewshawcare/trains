@@ -28,9 +28,6 @@ class WeightedDirectedGraph
             path = parameters[:strategy].call(fringe)
             fringe.delete_at(fringe.index(path))
 
-            puts "PATH: " + path.inspect
-            puts "FRINGE: " + fringe.inspect
-
             if (parameters[:select].call(path))
                 if parameters.has_key?(:first)
                     return path
