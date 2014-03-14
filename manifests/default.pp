@@ -21,7 +21,7 @@ package {"build-essential":
 }
 
 exec {"bundle install":
-    require => Package["bundler"],
-    path => "/usr/local/bin",
+    require => Package["build-essential", "bundler"],
+    path => ["/bin", "/usr/bin", "/usr/local/bin"],
     cwd => "/vagrant"
 }
