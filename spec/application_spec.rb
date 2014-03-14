@@ -27,7 +27,7 @@ describe Application, "#output" do
 
     it "returns 2 for the number of trips starting at C and ending at C with a maximum of 3 stops" do
         @application.find_all_trips({
-            start: "C",
+            root: "C",
             reject: Proc.new do |trip|
                 trip.length > 4
             end,
@@ -41,7 +41,7 @@ describe Application, "#output" do
 
     it "returns 3 for the number of trips starting at A and ending at C with exactly 4 stops" do
         @application.find_all_trips({
-            start: "A",
+            root: "A",
             reject: Proc.new do |trip|
                 trip.length > 5
             end,
@@ -52,23 +52,23 @@ describe Application, "#output" do
             end
         }).length.should eq(3)
     end
-=begin
+
     it "returns 9 for the length of the shortest route (in terms of distance to travel) from A to C" do
         @application.find_trip({
-            start: "A",
+            root: "A",
             select: Proc.new do |trip|
                 trip.last[:value] == "C"
             end
-        }).length.should eq(9)
+        }).last[:cost].should eq(9)
     end
-
+=begin
     it "returns 9 for the length of the shortest route (in terms of distance to travel) from B to B" do
         @application.find_trip({
-            start: "B",
+            root: "B",
             select: Proc.new do |trip|
                 trip.last[:value] == "B"
             end
-        }).length.should eq(9)
+        }).last[:cost].should eq(9)
     end
 
     it "returns 7 for the number of different routes from C to C with a distance of less than 30" do

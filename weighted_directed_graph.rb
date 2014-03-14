@@ -19,35 +19,41 @@ class WeightedDirectedGraph
     end
 
     def search parameters
-        root, select, reject, strategy = parameters.values_at(:root, :select, :reject, :strategy)
-        reject ||= Proc.new {|trip| false}
-        strategy ||= @@uniform_cost_search_strategy
-        expanded_nodes = Set.new []
-        fringe = [
-            [{value: root, cost: 0}]
-        ]
+        parameters[:strategy] ||= @@uniform_cost_search_strategy
+        fringe = [[{value: parameters[:root], cost: 0}]]
         paths = []
-        
+        expanded_nodes = Set.new()
+
         until fringe.empty?
-            path = strategy.call(fringe)
+            path = parameters[:strategy].call(fringe)
             fringe.delete_at(fringe.index(path))
 
-            if (select.call(path))
-                paths.push(path)
+            puts "PATH: " + path.inspect
+            puts "FRINGE: " + fringe.inspect
+
+            if (parameters[:select].call(path))
+                if parameters.has_key?(:first)
+                    return path
+                else
+                    paths.push(path)
+                end
             end
-            
-            #unless expanded_nodes.include? path.last[:value]
-                #expanded_nodes.add path.last[:value]
-            self.neighbours(path.last[:value]).each {|value, cost|
-                fringe.unshift(
-                    path.dup.push({
-                        value: value,
-                        cost: path.last[:cost] + cost
-                    })
-                )
-            }
-            #end
-            fringe.reject!(&reject)
+
+            if parameters.has_key?(:reject) or not expanded_nodes.member? path.last[:value]
+                self.neighbours(path.last[:value]).each {|value, cost|
+                    fringe.unshift(
+                        path.dup.push({
+                            value: value,
+                            cost: path.last[:cost] + cost
+                        })
+                    )
+                }
+                expanded_nodes.add path.last[:value]
+            end
+
+            if parameters.has_key?(:reject)
+                fringe.reject!(&parameters[:reject])
+            end
         end
 
         return paths
