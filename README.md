@@ -78,3 +78,14 @@ Delegates to `WeighedDirectedGraph#search`.
 ### Find Trip
 
 Delegates to `WeightedDirectedGraph#search` with the `first` parameter defined.
+
+## Visualizations
+
+I had created a few visualizations to as an aid for me to understand the problem and have included them for convenience:
+
+![Input](./visualizations/input.png)
+![Question 6](./visualizations/question_6.png)
+![Question 7](./visualizations/question_7.png)
+![Question 8](./visualizations/question_8.png)
+![Question 9](./visualizations/question_9.png)
+![Question 10](./visualizations/question_10.png)
