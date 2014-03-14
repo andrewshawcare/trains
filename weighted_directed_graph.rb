@@ -26,12 +26,14 @@ class WeightedDirectedGraph
 
   def search parameters
     strategy = parameters[:strategy] || @@uniform_cost_search_strategy
-    select = parameters[:select]
+    root = parameters[:root] || raise("root is a required parameter for search")
+    select = parameters[:select] || raise("select is a required parameter for search")
     reject = parameters[:reject]
+    first = parameters[:first]
     fringe = [
       [
         {
-          :value => parameters[:root],
+          :value => root,
           :cost => 0
         }
       ]
@@ -44,7 +46,7 @@ class WeightedDirectedGraph
       fringe.delete_at(fringe.index(path))
 
       if (select.call(path))
-        if parameters.has_key?(:first)
+        if first
           return path
         else
           paths.push(path)
