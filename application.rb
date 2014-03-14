@@ -30,7 +30,19 @@ class Application
     end
 
     def find_all_trips (parameters)
-        start, limit, select = parameters.values_at(:start, :limit, :select)
-        [1, 2]
+        start, reject, select = parameters.values_at(:start, :reject, :select)
+        @graph.search({
+            root: start,
+            reject: reject,
+            select: select
+        })
+    end
+
+    def find_trip (parameters)
+        start, select = parameters.values_at(:start, :select)
+        @graph.search({
+            root: start,
+            select: select
+        })
     end
 end
