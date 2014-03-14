@@ -1,60 +1,74 @@
+require 'set'
+
 class WeightedDirectedGraph
-    @@uniform_cost_search_strategy = Proc.new do |fringe|
-        fringe.reduce {|path, next_path|
-            path.last[:cost] < next_path.last[:cost] ? path : next_path
+
+  @@uniform_cost_search_strategy = Proc.new do |fringe|
+    fringe.reduce do |path, next_path|
+      if path.last[:cost] < next_path.last[:cost]
+        path
+      else
+        next_path
+      end
+    end
+  end
+
+  def initialize(edges)
+    @adjacency_list = edges.reduce({}) do |adjacency_list, edge|
+      adjacency_list[edge[:tail]] ||= {}
+      adjacency_list[edge[:tail]][edge[:head]] = edge[:cost]
+      adjacency_list
+    end
+  end
+
+  def neighbours node
+    @adjacency_list[node]
+  end
+
+  def search parameters
+    strategy = parameters[:strategy] || @@uniform_cost_search_strategy
+    select = parameters[:select]
+    reject = parameters[:reject]
+    fringe = [
+      [
+        {
+          :value => parameters[:root],
+          :cost => 0
         }
-    end
+      ]
+    ]
+    paths = []
+    expanded_nodes = Set.new()
 
-    def initialize(edges)
-        @adjacency_list = edges.reduce({}) do |adjacency_list, edge|
-            unless adjacency_list.has_key? edge[:tail]
-                adjacency_list[edge[:tail]] = {}
-            end
-            adjacency_list[edge[:tail]][edge[:head]] = edge[:cost]
-            adjacency_list
+    until fringe.empty?
+      path = strategy.call(fringe)
+      fringe.delete_at(fringe.index(path))
+
+      if (select.call(path))
+        if parameters.has_key?(:first)
+          return path
+        else
+          paths.push(path)
         end
-    end
+      end
 
-    def neighbours node
-        @adjacency_list[node]
-    end
-
-    def search parameters
-        parameters[:strategy] ||= @@uniform_cost_search_strategy
-        fringe = [[{value: parameters[:root], cost: 0}]]
-        paths = []
-        expanded_nodes = Set.new()
-
-        until fringe.empty?
-            path = parameters[:strategy].call(fringe)
-            fringe.delete_at(fringe.index(path))
-
-            if (parameters[:select].call(path))
-                if parameters.has_key?(:first)
-                    return path
-                else
-                    paths.push(path)
-                end
-            end
-
-            if parameters.has_key?(:reject) or not expanded_nodes.member? path.last[:value]
-                self.neighbours(path.last[:value]).each {|value, cost|
-                    fringe.unshift(
-                        path.dup.push({
-                            value: value,
-                            cost: path.last[:cost] + cost
-                        })
-                    )
-                }
-                expanded_nodes.add path.last[:value]
-            end
-
-            if parameters.has_key?(:reject)
-                fringe.reject!(&parameters[:reject])
-            end
+      if reject or not expanded_nodes.member?(path.last[:value])
+        neighbours = self.neighbours(path.last[:value])
+        neighbours.each do |value, cost|
+          fringe.unshift(
+            path.dup.push(
+              :value => value,
+              :cost => path.last[:cost] + cost
+            )
+          )
         end
+        expanded_nodes.add(path.last[:value])
+      end
 
-        return paths
+      if reject
+        fringe.reject!(&reject)
+      end
     end
-    
+
+    paths
+  end
 end

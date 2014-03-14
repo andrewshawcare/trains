@@ -1,4 +1,4 @@
-require_relative '../application'
+require_relative '../application.rb'
 
 describe Application, "#output" do
     before(:each) do
@@ -26,62 +26,62 @@ describe Application, "#output" do
     end
 
     it "returns 2 for the number of trips starting at C and ending at C with a maximum of 3 stops" do
-        @application.find_all_trips({
-            root: "C",
-            reject: Proc.new do |trip|
+        @application.find_all_trips(
+            :root => "C",
+            :reject => Proc.new do |trip|
                 trip.length > 4
             end,
-            select: Proc.new do |trip|
+            :select => Proc.new do |trip|
                 trip.last[:value] == "C" and
                 trip.length > 1 and
                 trip.length <= 4
             end
-        }).length.should eq(2)
+        ).length.should eq(2)
     end
 
     it "returns 3 for the number of trips starting at A and ending at C with exactly 4 stops" do
-        @application.find_all_trips({
-            root: "A",
-            reject: Proc.new do |trip|
+        @application.find_all_trips(
+            :root => "A",
+            :reject => Proc.new do |trip|
                 trip.length > 5
             end,
-            select: Proc.new do |trip|
+            :select => Proc.new do |trip|
                 trip.last[:value] == "C" and
                 trip.length > 1 and
                 trip.length == 5
             end
-        }).length.should eq(3)
+        ).length.should eq(3)
     end
 
     it "returns 9 for the length of the shortest route (in terms of distance to travel) from A to C" do
-        @application.find_trip({
-            root: "A",
-            select: Proc.new do |trip|
+        @application.find_trip(
+            :root => "A",
+            :select => Proc.new do |trip|
                 trip.last[:value] == "C"
             end
-        }).last[:cost].should eq(9)
+        ).last[:cost].should eq(9)
     end
     
     it "returns 9 for the length of the shortest route (in terms of distance to travel) from B to B" do
-        @application.find_trip({
-            root: "B",
-            select: Proc.new do |trip|
+        @application.find_trip(
+            :root => "B",
+            :select => Proc.new do |trip|
                 trip.last[:value] == "B" and
                 trip.length > 1
             end
-        }).last[:cost].should eq(9)
+        ).last[:cost].should eq(9)
     end
 
     it "returns 7 for the number of different routes from C to C with a distance of less than 30" do
-        @application.find_all_trips({
-            root: "C",
-            reject: Proc.new do |trip|
+        @application.find_all_trips(
+            :root => "C",
+            :reject => Proc.new do |trip|
                 trip.last[:cost] >= 30
             end,
-            select: Proc.new do |trip|
+            :select => Proc.new do |trip|
                 trip.last[:value] == "C" and
                 trip.length > 1
             end
-        }).length.should eq(7)
+        ).length.should eq(7)
     end
 end
