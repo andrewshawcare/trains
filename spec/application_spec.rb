@@ -4,6 +4,7 @@ describe Application, "#output" do
     before(:each) do
         @application = Application.new("./input.txt")
     end
+
     it "returns 9 for the distance of route A-B-C" do
         @application.distance(["A", "B", "C"]).should eq(9)
     end
@@ -60,6 +61,7 @@ describe Application, "#output" do
             end
         }).last[:cost].should eq(9)
     end
+    
     it "returns 9 for the length of the shortest route (in terms of distance to travel) from B to B" do
         @application.find_trip({
             root: "B",
@@ -69,17 +71,17 @@ describe Application, "#output" do
             end
         }).last[:cost].should eq(9)
     end
-=begin
+
     it "returns 7 for the number of different routes from C to C with a distance of less than 30" do
         @application.find_all_trips({
-            start: "C",
-            limit: Proc.new do |path|
-                path.last[:cost] >= 30
+            root: "C",
+            reject: Proc.new do |trip|
+                trip.last[:cost] >= 30
             end,
-            select: Proc.new do |path|
-                path.last[:value] == "C"
+            select: Proc.new do |trip|
+                trip.last[:value] == "C" and
+                trip.length > 1
             end
-        }).length.should eq(2)
+        }).length.should eq(7)
     end
-=end
 end

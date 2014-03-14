@@ -4,6 +4,7 @@ class WeightedDirectedGraph
             path.last[:cost] < next_path.last[:cost] ? path : next_path
         }
     end
+
     def initialize(edges)
         @adjacency_list = edges.reduce({}) do |adjacency_list, edge|
             unless adjacency_list.has_key? edge[:tail]
@@ -55,4 +56,5 @@ class WeightedDirectedGraph
 
         return paths
     end
+    
 end
