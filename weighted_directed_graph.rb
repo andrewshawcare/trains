@@ -12,7 +12,7 @@ class WeightedDirectedGraph
     end
   end
 
-  def initialize(edges)
+  def initialize edges
     @adjacency_list = edges.reduce({}) do |adjacency_list, edge|
       adjacency_list[edge[:tail]] ||= {}
       adjacency_list[edge[:tail]][edge[:head]] = edge[:cost]
