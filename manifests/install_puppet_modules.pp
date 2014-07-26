@@ -1,5 +1,5 @@
 Exec {
-    path => [
+    path: [
         '/bin',
         '/usr/bin',
         '/opt/vagrant_ruby/bin'
@@ -7,10 +7,10 @@ Exec {
 }
 
 file {'puppet module directory':
-    path => '/etc/puppet/modules',
-    ensure => directory
+    path: '/etc/puppet/modules',
+    ensure: directory
 }
 
 exec {'puppet module install puppetlabs/ruby':
-    require => File['puppet module directory']
+    require: File['puppet module directory']
 }
