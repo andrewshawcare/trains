@@ -1,27 +1,27 @@
-exec {"apt-get update":
-    path => "/usr/bin"
+exec {'apt-get update':
+  path: '/usr/bin'
 }
 
-class {"ruby":
-    require => Exec["apt-get update"],
-    ruby_package => "ruby1.9.1-full",
-    rubygems_package => "rubygems1.9.1",
-    gems_version => "latest"
+class {'ruby':
+    require: Exec['apt-get update'],
+    ruby_package: 'ruby1.9.1-full',
+    rubygems_package: 'rubygems1.9.1',
+    gems_version: 'latest'
 }
 
-package {"bundler":
-    require => Class["ruby"],
-    ensure => installed,
-    provider => "gem"
+package {'bundler':
+    require: Class['ruby'],
+    ensure: installed,
+    provider: 'gem'
 }
 
-package {"build-essential":
-    require => Exec["apt-get update"],
-    ensure => installed
+package {'build-essential':
+    require: Exec['apt-get update'],
+    ensure: installed
 }
 
-exec {"bundle install":
-    require => Package["build-essential", "bundler"],
-    path => ["/bin", "/usr/bin", "/usr/local/bin"],
-    cwd => "/vagrant"
+exec {'bundle install':
+    require: Package['build-essential', 'bundler'],
+    path: ['/bin', '/usr/bin', '/usr/local/bin'],
+    cwd: '/vagrant'
 }
